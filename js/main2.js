@@ -1,6 +1,7 @@
 let movieList = null;
 let triggerMode = false;
 let inputSearch = null;
+
 const createStyle = () =>{
   const headStyle = document.createElement('style');
   headStyle.innerHTML = `
@@ -8,10 +9,14 @@ const createStyle = () =>{
 	box-sizing: border-box;
 }
 body{
-	margin: 0; 
+	margin: 0;
+	font-family: Arial, serif;
+	background: #b3efeb;
 } 
-.wrapper{
+.container{
 	padding: 20px;
+	max-width: 1280px;
+	margin: 0 auto;
 }
 .movies {
 	display: grid;
@@ -26,13 +31,41 @@ body{
 .movie__img{
 	width: 100%;
 	object-fit: cover;
-}`;
+}
+.search {
+	margin-bottom: 30px;
+}
+.search__label-input{
+	margin-bottom: 7px;
+	display: block;
+}
+.search__input{
+	padding: 10px 15px;
+	width: 400px;
+	display: block;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+.search__label-checkbox{
+	font-size: 12px;
+	display: block;
+	margin-top: -17px;
+	margin-left: 25px;
+}
+@media(max-width: 420px){
+	.search__input{
+		width:100%;
+	}
+}
+`;
+document.querySelector('head').appendChild(headStyle);
 };
 const triggerModeHandler = () => triggerMode = !triggerMode;
 
 const createHeader =(container) => {
 	const header = document.createElement('h1');
-	header.innerText = 'Приложение для поиск фильмов';
+	header.innerText = 'Приложение для поиска фильмов';
 	container.append(header);
 };
 const setAttribute = (el, attrs) => {
@@ -65,6 +98,7 @@ const createSearchBox = (container)=> {
 		type: 'checkbox'
 	});
 	checkbox.addEventListener('click', triggerModeHandler);
+
 	setAttribute(labelForCheckbox, {
 		class:'search__label-checkbox',
 		for: 'checkbox'
@@ -77,7 +111,7 @@ const createSearchBox = (container)=> {
 
 const createMarkup = () =>{
 	const container = document.createElement('div');
-	container.classList.add('wrapper');
+	container.classList.add('container');
 
 	createHeader(container);
 	createSearchBox(container);
@@ -87,6 +121,8 @@ const createMarkup = () =>{
 	container.appendChild(movies);
 	document.querySelector('body').prepend(container);
 	movieList = document.querySelector('.movies');
+
+	inputSearch = document.querySelector('#search');
 };
 
 const addMovieToList = (movie) => {
@@ -100,5 +136,17 @@ const addMovieToList = (movie) => {
 	item.appendChild(img);
 	movieList.appendChild(item);
 };
+
+const clearMoviesMarkup = () => movieList && (movieList.innerHTML ='');
+
+const delay = (()=> {
+	let timer = 0;
+	return (callback, ms) => {
+		clearTimeout(timer);
+		timer = setTimeout(callback, ms)
+	};
+})();
+
+
 createMarkup()
 createStyle()
